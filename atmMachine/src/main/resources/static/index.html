@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Machine</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            width: 350px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .deposit-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .deposit-btn:hover {
+            background-color: #3a7bc8;
+        }
+
+        .withdraw-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .withdraw-btn:hover {
+            background-color: #e09511;
+        }
+
+        .balance-btn {
+            background-color: #4caf50;
+            color: white;
+            width: 100%;
+        }
+
+        .balance-btn:hover {
+            background-color: #45a049;
+        }
+
+        .balance {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e8f4fd;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>ATM Machine</h1>
+
+    <div class="input-group">
+        <label for="amount">Enter Amount:</label>
+        <input type="number" id="amount" placeholder="Enter amount" min="0">
+    </div>
+
+    <div class="button-group">
+        <button onclick="deposit()" class="deposit-btn">Deposit</button>
+        <button onclick="withdraw()" class="withdraw-btn">Withdraw</button>
+    </div>
+
+    <button onclick="checkBalance()" class="balance-btn">Check Balance</button>
+
+    <div class="balance">
+        <p id="balanceDisplay">Balance: $0</p>
+    </div>
+</div>
+
+<script>
+    function deposit() {
+        const amount = document.getElementById('amount').value;
+        fetch(`/atm/deposit?amount=${amount}`, { method: 'POST' })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                checkBalance();
+            });
+    }
+
+    function withdraw() {
+        const amount = document.getElementById('amount').value;
+        fetch(`/atm/withdraw?amount=${amount}`, { method: 'POST' })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                checkBalance();
+            });
+    }
+
+    function checkBalance() {
+        fetch('/atm/balance')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('balanceDisplay').textContent = data;
+            });
+    }
+</script>
+</body>
+</html>
